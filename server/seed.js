@@ -43,6 +43,7 @@ async function seed() {
 
         // Create Verifications
         await Verification.create({
+            claim: claim1.claimText,
             claimId: claim1._id,
             verdict: "Unclear",
             explanation: "While quantum computing shows promise for climate modeling, there is no scientific consensus that it will 'solve' climate change by 2030. Experts suggest it will be a tool, not a silver bullet.",
@@ -50,6 +51,7 @@ async function seed() {
         });
 
         await Verification.create({
+            claim: claim2.claimText,
             claimId: claim2._id,
             verdict: "False",
             explanation: "The UN has discussed AI regulation, but no binding bill has been passed unanimously. Several countries have expressed reservations.",
