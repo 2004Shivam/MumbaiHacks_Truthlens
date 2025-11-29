@@ -11,18 +11,6 @@
 
 [Features](#features) • [Tech Stack](#tech-stack) • [Installation](#installation) • [Usage](#usage)
 
-</div>
-
----
-
-## 📋 Overview
-
-TruthLens is an advanced AI-powered fact-checking platform that automatically detects and verifies claims from news articles using LLM technology (Groq/Llama 3.3) and real-time news data. Built for MumbaiHacks hackathon.
-
-### ✨ Key Features
-
-- **🤖 AI-Powered Verification**: Uses Groq's Llama 3.3 70B model for intelligent claim verification
-- **📰 Real-Time News Analysis**: Automatically fetches and clusters news articles
 - **🎯 Smart Claim Extraction**: AI agents extract verifiable claims from news topics
 - **🔍 Multi-Source Verification**: Cross-references claims across multiple news sources
 - **📊 Analytics Dashboard**: Comprehensive insights and trend analysis

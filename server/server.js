@@ -6,6 +6,7 @@ const cron = require('node-cron');
 
 // Routes
 const verifyRoutes = require('./routes/verify');
+const verifyImageRoutes = require('./routes/verifyImage');
 const topicRoutes = require('./routes/topics');
 const claimRoutes = require('./routes/claims');
 const adminRoutes = require('./routes/admin');
@@ -26,7 +27,11 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// Serve uploaded images
+app.use('/uploads', express.static('uploads'));
+
 // Routes
+app.use('/api/verify/image', verifyImageRoutes);
 app.use('/api/verify', verifyRoutes);
 app.use('/api/topics', topicRoutes);
 app.use('/api/claims', claimRoutes);
@@ -77,3 +82,4 @@ setTimeout(explanationAgent, 40000); // Wait 40s
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+// Trigger restart

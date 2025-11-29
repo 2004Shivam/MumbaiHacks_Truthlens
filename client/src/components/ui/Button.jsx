@@ -7,13 +7,13 @@ const Button = ({
     className = '',
     ...props
 }) => {
-    const baseStyles = 'font-medium transition-all duration-150 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-950';
+    const baseStyles = 'font-medium transition-all duration-150 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white';
 
     const variants = {
-        primary: 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30',
-        secondary: 'bg-slate-800 hover:bg-slate-700 text-white border border-white/10',
-        ghost: 'text-gray-300 hover:text-white hover:bg-white/5',
-        danger: 'bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-500/20'
+        primary: 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg',
+        secondary: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300',
+        ghost: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
+        danger: 'bg-red-600 hover:bg-red-700 text-white shadow-md'
     };
 
     const sizes = {

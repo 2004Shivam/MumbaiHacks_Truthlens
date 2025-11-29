@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
-import { Shield, Send, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
+import { Shield, Send, ChevronDown, ChevronUp, ExternalLink, FileText, Image as ImageIcon } from 'lucide-react';
 import { useMode } from '../context/ModeContext';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
+import ImageUpload from '../components/ImageUpload';
 
 const Verify = () => {
+    const [activeTab, setActiveTab] = useState('text'); // 'text' or 'image'
     const [text, setText] = useState('');
+    const [selectedImage, setSelectedImage] = useState(null);
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [showAnalystDetails, setShowAnalystDetails] = useState(false);
     const { isCitizen, isAnalyst } = useMode();
 
-    const handleSubmit = async (e) => {
+    const handleTextSubmit = async (e) => {
         e.preventDefault();
         if (!text.trim() || loading) return;
 
@@ -37,6 +40,38 @@ const Verify = () => {
             }
         } catch (err) {
             console.error('Verification error:', err);
+            setError('Failed to connect to verification service');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleImageSubmit = async (e) => {
+        e.preventDefault();
+        if (!selectedImage || loading) return;
+
+        setLoading(true);
+        setError('');
+        setResult(null);
+
+        try {
+            const formData = new FormData();
+            formData.append('image', selectedImage);
+
+            const response = await fetch('http://localhost:5000/api/verify/image', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setResult(data);
+            } else {
+                setError(data.error || 'Failed to verify image');
+            }
+        } catch (err) {
+            console.error('Image verification error:', err);
             setError('Failed to connect to verification service');
         } finally {
             setLoading(false);
@@ -68,41 +103,105 @@ const Verify = () => {
                 <p className="text-gray-400">AI-powered fact-checking using real-time news data</p>
             </div>
 
-            {/* Input Card */}
-            <Card className="p-6 mb-6">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
-                            Enter a claim or statement to verify
-                        </label>
-                        <textarea
-                            value={text}
-                            onChange={(e) => setText(e.target.value)}
-                            placeholder="Example: The Eiffel Tower is located in France"
-                            className="w-full h-32 px-4 py-3 bg-slate-900/60 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-150 resize-none"
-                            disabled={loading}
-                        />
-                    </div>
-                    <Button
-                        type="submit"
-                        disabled={!text.trim() || loading}
-                        className="w-full"
-                        size="lg"
+            {/* Tab Switcher */}
+            <Card className="p-4 mb-6">
+                <div className="flex space-x-1 bg-gray-100 p-1 rounded-xl">
+                    <button
+                        onClick={() => setActiveTab('text')}
+                        className={`flex-1 flex items-center justify-center space-x-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${activeTab === 'text'
+                            ? 'bg-indigo-600 text-white'
+                            : 'text-gray-400 hover:text-white'
+                            }`}
                     >
-                        {loading ? (
-                            <>
-                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
-                                Verifying...
-                            </>
-                        ) : (
-                            <>
-                                <Send className="w-5 h-5 mr-2" />
-                                Verify Claim
-                            </>
-                        )}
-                    </Button>
-                </form>
+                        <FileText className="w-4 h-4" />
+                        <span>Text Claim</span>
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('image')}
+                        className={`flex-1 flex items-center justify-center space-x-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${activeTab === 'image'
+                            ? 'bg-indigo-600 text-white'
+                            : 'text-gray-400 hover:text-white'
+                            }`}
+                    >
+                        <ImageIcon className="w-4 h-4" />
+                        <span>Image / Screenshot</span>
+                    </button>
+                </div>
             </Card>
+
+            {/* Input Card - Text */}
+            {activeTab === 'text' && (
+                <Card className="p-6 mb-6">
+                    <form onSubmit={handleTextSubmit} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                                Enter a claim or statement to verify
+                            </label>
+                            <textarea
+                                value={text}
+                                onChange={(e) => setText(e.target.value)}
+                                placeholder="Example: The Eiffel Tower is located in France"
+                                className="w-full h-32 px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-150 resize-none"
+                                disabled={loading}
+                            />
+                        </div>
+                        <Button
+                            type="submit"
+                            disabled={!text.trim() || loading}
+                            className="w-full"
+                            size="lg"
+                        >
+                            {loading ? (
+                                <>
+                                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
+                                    Verifying...
+                                </>
+                            ) : (
+                                <>
+                                    <Send className="w-5 h-5 mr-2" />
+                                    Verify Claim
+                                </>
+                            )}
+                        </Button>
+                    </form>
+                </Card>
+            )}
+
+            {/* Input Card - Image */}
+            {activeTab === 'image' && (
+                <Card className="p-6 mb-6">
+                    <form onSubmit={handleImageSubmit} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-300 mb-3">
+                                Upload an image or screenshot
+                            </label>
+                            <ImageUpload
+                                onImageSelect={setSelectedImage}
+                                onImageRemove={() => setSelectedImage(null)}
+                                disabled={loading}
+                            />
+                        </div>
+                        <Button
+                            type="submit"
+                            disabled={!selectedImage || loading}
+                            className="w-full"
+                            size="lg"
+                        >
+                            {loading ? (
+                                <>
+                                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
+                                    Analyzing Image...
+                                </>
+                            ) : (
+                                <>
+                                    <Shield className="w-5 h-5 mr-2" />
+                                    Verify Image
+                                </>
+                            )}
+                        </Button>
+                    </form>
+                </Card>
+            )}
 
             {/* Error Message */}
             {error && (
@@ -114,12 +213,55 @@ const Verify = () => {
             {/* Result Card */}
             {result && (
                 <div className="space-y-4">
+                    {/* Image Info (if from image) */}
+                    {result.extractedText && (
+                        <Card className="p-6">
+                            <h3 className="text-sm font-medium text-gray-700 mb-3">Extracted Text from Image</h3>
+                            <p className="text-gray-900 bg-gray-50 p-4 rounded-xl border border-gray-200 mb-3">
+                                {result.extractedText}
+                            </p>
+                            {result.ocrConfidence && (
+                                <div className="flex items-center justify-between text-sm">
+                                    <span className="text-gray-400">OCR Confidence</span>
+                                    <span className="text-white font-medium">
+                                        {(result.ocrConfidence).toFixed(0)}%
+                                    </span>
+                                </div>
+                            )}
+                        </Card>
+                    )}
+
+                    {/* Fake Detection (if from image) */}
+                    {result.fakeDetection && (
+                        <Card className="p-6">
+                            <h3 className="text-sm font-medium text-gray-400 mb-3">Image Authenticity Analysis</h3>
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="text-gray-900">Status:</span>
+                                <Badge
+                                    variant={result.fakeDetection.isFake ? 'false' : 'true'}
+                                    size="md"
+                                >
+                                    {result.fakeDetection.isFake ? 'Suspicious' : 'Appears Authentic'}
+                                </Badge>
+                            </div>
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="text-gray-400 text-sm">Confidence</span>
+                                <span className="text-white font-medium">
+                                    {(result.fakeDetection.confidence * 100).toFixed(0)}%
+                                </span>
+                            </div>
+                            <p className="text-sm text-gray-300 bg-white/5 p-3 rounded-lg">
+                                {result.fakeDetection.reasoning}
+                            </p>
+                        </Card>
+                    )}
+
                     {/* Verdict Card */}
                     <Card className="p-6">
                         <div className="flex items-start justify-between mb-4">
                             <div>
                                 <p className="text-sm text-gray-400 mb-2">Claim</p>
-                                <p className="text-lg font-medium text-white">{result.claim}</p>
+                                <p className="text-lg font-medium text-gray-900">{result.claim}</p>
                             </div>
                             <Badge
                                 variant={result.verdict?.toLowerCase()}
@@ -135,11 +277,11 @@ const Verify = () => {
                             <div className="mb-4 pb-4 border-b border-white/10">
                                 <div className="flex items-center justify-between mb-2">
                                     <span className="text-sm text-gray-400">Confidence</span>
-                                    <span className="text-sm font-medium text-white">
+                                    <span className="text-sm font-medium text-gray-900">
                                         {(result.confidence * 100).toFixed(0)}%
                                     </span>
                                 </div>
-                                <div className="w-full bg-slate-800 rounded-full h-2">
+                                <div className="w-full bg-gray-200 rounded-full h-2">
                                     <div
                                         className="bg-indigo-500 h-2 rounded-full transition-all duration-500"
                                         style={{ width: `${result.confidence * 100}%` }}
@@ -153,8 +295,8 @@ const Verify = () => {
                             <p className="text-sm text-gray-400 mb-2">
                                 {isCitizen ? 'Explanation' : 'Public Explanation'}
                             </p>
-                            <p className="text-gray-300 leading-relaxed">
-                                {isCitizen ? result.publicExplanation : result.publicExplanation}
+                            <p className="text-gray-700 leading-relaxed">
+                                {result.publicExplanation}
                             </p>
                         </div>
 
@@ -179,23 +321,6 @@ const Verify = () => {
                                         <p className="text-sm text-gray-300 leading-relaxed">
                                             {result.analystExplanation}
                                         </p>
-                                        {result.previousVerifications && result.previousVerifications.length > 0 && (
-                                            <div className="mt-4 pt-4 border-t border-white/10">
-                                                <p className="text-xs text-gray-400 mb-2">Previous Verifications</p>
-                                                <div className="space-y-2">
-                                                    {result.previousVerifications.map((v, i) => (
-                                                        <div key={i} className="flex items-center justify-between text-xs">
-                                                            <Badge variant={v.verdict?.toLowerCase()} size="sm">
-                                                                {v.verdict}
-                                                            </Badge>
-                                                            <span className="text-gray-500">
-                                                                {v.confidence ? `${(v.confidence * 100).toFixed(0)}%` : 'N/A'}
-                                                            </span>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
                                     </div>
                                 )}
                             </div>

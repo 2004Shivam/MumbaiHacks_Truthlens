@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Filter, ExternalLink, FileText, TrendingUp } from 'lucide-react';
+import { Filter, ExternalLink, FileText } from 'lucide-react';
 import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
 
@@ -49,8 +49,8 @@ const Topics = () => {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-white">All Topics</h2>
-                    <p className="text-gray-400 text-sm mt-1">
+                    <h2 className="text-2xl font-bold text-gray-900">All Topics</h2>
+                    <p className="text-gray-600 text-sm mt-1">
                         {filteredTopics.length} {selectedCategory === 'all' ? 'total' : selectedCategory} topic{filteredTopics.length !== 1 ? 's' : ''}
                     </p>
                 </div>
@@ -59,14 +59,14 @@ const Topics = () => {
             {/* Category Filters */}
             <Card className="p-4">
                 <div className="flex items-center space-x-2 overflow-x-auto">
-                    <Filter className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    <Filter className="w-4 h-4 text-gray-600 flex-shrink-0" />
                     {categories.map(cat => (
                         <button
                             key={cat.value}
                             onClick={() => setSelectedCategory(cat.value)}
                             className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-150 ${selectedCategory === cat.value
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                                    ? 'bg-indigo-600 text-white shadow-md'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900'
                                 }`}
                         >
                             {cat.label}
@@ -75,7 +75,7 @@ const Topics = () => {
                 </div>
             </Card>
 
-            {/* Topics Table */}
+            {/* Topics List */}
             {loading ? (
                 <Card className="p-12">
                     <div className="flex items-center justify-center">
@@ -85,8 +85,8 @@ const Topics = () => {
             ) : filteredTopics.length === 0 ? (
                 <Card className="p-12">
                     <div className="text-center">
-                        <FileText className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                        <p className="text-gray-400">No topics found. Agents are processing news...</p>
+                        <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-600">No topics found. Agents are processing news...</p>
                     </div>
                 </Card>
             ) : (
@@ -100,14 +100,14 @@ const Topics = () => {
                                 <div className="flex items-start justify-between">
                                     <div className="flex-1">
                                         <div className="flex items-center space-x-3 mb-2">
-                                            <h3 className="text-lg font-semibold text-white">
+                                            <h3 className="text-lg font-semibold text-gray-900">
                                                 {topic.title}
                                             </h3>
                                             <Badge variant={topic.category || 'general'} size="sm">
                                                 {topic.category || 'general'}
                                             </Badge>
                                         </div>
-                                        <p className="text-gray-400 text-sm line-clamp-2 mb-3">
+                                        <p className="text-gray-600 text-sm line-clamp-3 mb-3">
                                             {topic.summary}
                                         </p>
                                         <div className="flex items-center space-x-4 text-xs text-gray-500">

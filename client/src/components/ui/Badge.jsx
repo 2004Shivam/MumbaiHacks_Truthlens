@@ -10,16 +10,16 @@ const Badge = ({
     const baseStyles = 'inline-flex items-center font-medium rounded-full';
 
     const variants = {
-        default: 'bg-slate-800 text-gray-300 border border-white/10',
-        true: 'bg-green-500/10 text-green-400 border border-green-500/20',
-        false: 'bg-red-500/10 text-red-400 border border-red-500/20',
-        unclear: 'bg-orange-500/10 text-orange-400 border border-orange-500/20',
-        general: 'bg-blue-500/10 text-blue-400 border border-blue-500/20',
-        election: 'bg-purple-500/10 text-purple-400 border border-purple-500/20',
-        health: 'bg-green-500/10 text-green-400 border border-green-500/20',
-        disaster: 'bg-red-500/10 text-red-400 border border-red-500/20',
-        finance: 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20',
-        primary: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20',
+        default: 'bg-gray-100 text-gray-700 border border-gray-300',
+        true: 'bg-green-50 text-green-700 border border-green-200',
+        false: 'bg-red-50 text-red-700 border border-red-200',
+        unclear: 'bg-orange-50 text-orange-700 border border-orange-200',
+        general: 'bg-blue-50 text-blue-700 border border-blue-200',
+        election: 'bg-purple-50 text-purple-700 border border-purple-200',
+        health: 'bg-green-50 text-green-700 border border-green-200',
+        disaster: 'bg-red-50 text-red-700 border border-red-200',
+        finance: 'bg-yellow-50 text-yellow-700 border border-yellow-200',
+        primary: 'bg-indigo-50 text-indigo-700 border border-indigo-200',
     };
 
     const sizes = {
