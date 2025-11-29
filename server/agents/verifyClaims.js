@@ -37,6 +37,7 @@ async function verifyClaimsAgent() {
             const verificationResult = await verifyClaim(claim.claimText, combinedContext);
 
             await Verification.create({
+                claim: claim.claimText,
                 claimId: claim._id,
                 verdict: verificationResult.verdict,
                 explanation: verificationResult.explanation,
