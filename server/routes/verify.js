@@ -71,6 +71,7 @@ router.post('/', async (req, res) => {
         // 7. Save Verification
         console.log('Step 7: Saving verification to database...');
         const verification = await Verification.create({
+            claim: claimText,
             claimId: claim._id,
             verdict: verificationResult.verdict,
             confidence: verificationResult.confidence || 0.5,

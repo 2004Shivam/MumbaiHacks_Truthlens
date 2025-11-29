@@ -13,7 +13,7 @@ const Navbar = () => {
                     <Link to="/" className="flex items-center space-x-2">
                         <ShieldCheck className="w-8 h-8 text-primary" />
                         <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
-                            TruthLens
+                            Satya AI
                         </span>
                     </Link>
                     <div className="flex items-center space-x-8">

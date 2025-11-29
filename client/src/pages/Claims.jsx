@@ -29,8 +29,8 @@ const Claims = () => {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-white">All Claims</h2>
-                    <p className="text-gray-400 text-sm mt-1">
+                    <h2 className="text-2xl font-bold text-gray-900">All Claims</h2>
+                    <p className="text-gray-600 text-sm mt-1">
                         {claims.length} claim{claims.length !== 1 ? 's' : ''} extracted
                     </p>
                 </div>
@@ -47,7 +47,7 @@ const Claims = () => {
                 <Card className="p-12">
                     <div className="text-center">
                         <MessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                        <p className="text-gray-400">No claims yet. Agents are extracting claims...</p>
+                        <p className="text-gray-600">No claims yet. Agents are extracting claims...</p>
                     </div>
                 </Card>
             ) : (
@@ -83,11 +83,11 @@ const Claims = () => {
                                                 </Badge>
                                             )}
                                         </div>
-                                        <p className="text-white font-medium mb-2 line-clamp-2">
+                                        <p className="text-gray-900 font-medium mb-2 line-clamp-3">
                                             {claim.claimText}
                                         </p>
                                         {claim.topicId?.title && (
-                                            <p className="text-xs text-gray-500">
+                                            <p className="text-xs text-gray-600">
                                                 Topic: {claim.topicId.title}
                                             </p>
                                         )}

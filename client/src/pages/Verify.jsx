@@ -105,12 +105,12 @@ const Verify = () => {
 
             {/* Tab Switcher */}
             <Card className="p-4 mb-6">
-                <div className="flex space-x-1 bg-slate-900/60 p-1 rounded-xl">
+                <div className="flex space-x-1 bg-gray-100 p-1 rounded-xl">
                     <button
                         onClick={() => setActiveTab('text')}
                         className={`flex-1 flex items-center justify-center space-x-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${activeTab === 'text'
-                                ? 'bg-indigo-600 text-white'
-                                : 'text-gray-400 hover:text-white'
+                            ? 'bg-indigo-600 text-white'
+                            : 'text-gray-400 hover:text-white'
                             }`}
                     >
                         <FileText className="w-4 h-4" />
@@ -119,8 +119,8 @@ const Verify = () => {
                     <button
                         onClick={() => setActiveTab('image')}
                         className={`flex-1 flex items-center justify-center space-x-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${activeTab === 'image'
-                                ? 'bg-indigo-600 text-white'
-                                : 'text-gray-400 hover:text-white'
+                            ? 'bg-indigo-600 text-white'
+                            : 'text-gray-400 hover:text-white'
                             }`}
                     >
                         <ImageIcon className="w-4 h-4" />
@@ -141,7 +141,7 @@ const Verify = () => {
                                 value={text}
                                 onChange={(e) => setText(e.target.value)}
                                 placeholder="Example: The Eiffel Tower is located in France"
-                                className="w-full h-32 px-4 py-3 bg-slate-900/60 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-150 resize-none"
+                                className="w-full h-32 px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-150 resize-none"
                                 disabled={loading}
                             />
                         </div>
@@ -216,8 +216,8 @@ const Verify = () => {
                     {/* Image Info (if from image) */}
                     {result.extractedText && (
                         <Card className="p-6">
-                            <h3 className="text-sm font-medium text-gray-400 mb-3">Extracted Text from Image</h3>
-                            <p className="text-white bg-slate-900/60 p-4 rounded-xl border border-white/10 mb-3">
+                            <h3 className="text-sm font-medium text-gray-700 mb-3">Extracted Text from Image</h3>
+                            <p className="text-gray-900 bg-gray-50 p-4 rounded-xl border border-gray-200 mb-3">
                                 {result.extractedText}
                             </p>
                             {result.ocrConfidence && (
@@ -236,7 +236,7 @@ const Verify = () => {
                         <Card className="p-6">
                             <h3 className="text-sm font-medium text-gray-400 mb-3">Image Authenticity Analysis</h3>
                             <div className="flex items-center justify-between mb-3">
-                                <span className="text-white">Status:</span>
+                                <span className="text-gray-900">Status:</span>
                                 <Badge
                                     variant={result.fakeDetection.isFake ? 'false' : 'true'}
                                     size="md"
@@ -261,7 +261,7 @@ const Verify = () => {
                         <div className="flex items-start justify-between mb-4">
                             <div>
                                 <p className="text-sm text-gray-400 mb-2">Claim</p>
-                                <p className="text-lg font-medium text-white">{result.claim}</p>
+                                <p className="text-lg font-medium text-gray-900">{result.claim}</p>
                             </div>
                             <Badge
                                 variant={result.verdict?.toLowerCase()}
@@ -277,11 +277,11 @@ const Verify = () => {
                             <div className="mb-4 pb-4 border-b border-white/10">
                                 <div className="flex items-center justify-between mb-2">
                                     <span className="text-sm text-gray-400">Confidence</span>
-                                    <span className="text-sm font-medium text-white">
+                                    <span className="text-sm font-medium text-gray-900">
                                         {(result.confidence * 100).toFixed(0)}%
                                     </span>
                                 </div>
-                                <div className="w-full bg-slate-800 rounded-full h-2">
+                                <div className="w-full bg-gray-200 rounded-full h-2">
                                     <div
                                         className="bg-indigo-500 h-2 rounded-full transition-all duration-500"
                                         style={{ width: `${result.confidence * 100}%` }}
@@ -295,7 +295,7 @@ const Verify = () => {
                             <p className="text-sm text-gray-400 mb-2">
                                 {isCitizen ? 'Explanation' : 'Public Explanation'}
                             </p>
-                            <p className="text-gray-300 leading-relaxed">
+                            <p className="text-gray-700 leading-relaxed">
                                 {result.publicExplanation}
                             </p>
                         </div>

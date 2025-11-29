@@ -12,18 +12,20 @@ const Dashboard = () => {
     const [recentTopics, setRecentTopics] = useState([]);
     const [recentClaims, setRecentClaims] = useState([]);
     const [chartData, setChartData] = useState([]);
-    const [activeTab, setActiveTab] = useState('topics'); // topics or claims
+    const [activeTab, setActiveTab] = useState('topics');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [topicsRes, claimsRes] = await Promise.all([
+                const [topicsRes, claimsRes, summaryRes] = await Promise.all([
                     axios.get('http://localhost:5000/api/topics'),
-                    axios.get('http://localhost:5000/api/claims')
+                    axios.get('http://localhost:5000/api/claims'),
+                    axios.get('http://localhost:5000/api/insights/summary')
                 ]);
 
                 const topics = topicsRes.data;
                 const claims = claimsRes.data;
+                const summary = summaryRes.data;
 
                 setRecentTopics(topics.slice(0, 5));
                 setRecentClaims(claims.slice(0, 5));
@@ -32,10 +34,9 @@ const Dashboard = () => {
                     topics: topics.length,
                     claims: claims.length,
                     verified: claims.filter(c => c.isVerified).length,
-                    falseClaims: 0 // TODO: Get from verdicts when available
+                    falseClaims: summary.byVerdict?.false || 0
                 });
 
-                // Mock chart data for activity trends
                 const mockData = [
                     { name: 'Mon', verified: 4 },
                     { name: 'Tue', verified: 7 },
@@ -62,14 +63,14 @@ const Dashboard = () => {
                     title="Active Topics"
                     value={stats.topics}
                     icon={Activity}
-                    trend="+12%"
+
                     trendDirection="up"
                 />
                 <StatCard
                     title="Total Claims"
                     value={stats.claims}
                     icon={FileText}
-                    trend="+8%"
+
                     trendDirection="up"
                 />
                 <StatCard
@@ -90,36 +91,42 @@ const Dashboard = () => {
                 <Card className="p-6 lg:col-span-2">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center space-x-2">
-                            <TrendingUp className="w-5 h-5 text-indigo-400" />
-                            <h2 className="text-xl font-semibold text-white">Verification Activity</h2>
+                            <TrendingUp className="w-5 h-5 text-indigo-600" />
+                            <h2 className="text-xl font-semibold text-gray-900">Verification Activity</h2>
                         </div>
                         <Badge variant="primary" size="sm">Last 7 Days</Badge>
                     </div>
                     <div className="h-64 w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={chartData}>
-                                <defs>
-                                    <linearGradient id="colorVerified" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                                <XAxis dataKey="name" stroke="#64748b" />
-                                <YAxis stroke="#64748b" />
-                                <Tooltip
-                                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', borderRadius: '12px' }}
-                                    itemStyle={{ color: '#f9fafb' }}
-                                />
-                                <Area
-                                    type="monotone"
-                                    dataKey="verified"
-                                    stroke="#6366f1"
-                                    strokeWidth={2}
-                                    fillOpacity={1}
-                                    fill="url(#colorVerified)"
-                                />
-                            </AreaChart>
+                            {chartData.length > 0 ? (
+                                <AreaChart data={chartData}>
+                                    <defs>
+                                        <linearGradient id="colorVerified" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
+                                            <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                                    <XAxis dataKey="name" stroke="#6b7280" />
+                                    <YAxis stroke="#6b7280" />
+                                    <Tooltip
+                                        contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e5e7eb', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
+                                        itemStyle={{ color: '#111827' }}
+                                    />
+                                    <Area
+                                        type="monotone"
+                                        dataKey="verified"
+                                        stroke="#6366f1"
+                                        strokeWidth={2}
+                                        fillOpacity={1}
+                                        fill="url(#colorVerified)"
+                                    />
+                                </AreaChart>
+                            ) : (
+                                <div className="flex items-center justify-center h-full text-gray-400">
+                                    Loading chart data...
+                                </div>
+                            )}
                         </ResponsiveContainer>
                     </div>
                 </Card>
@@ -127,7 +134,7 @@ const Dashboard = () => {
                 {/* High Risk Topics */}
                 <Card className="p-6">
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-lg font-semibold text-white">High Risk</h2>
+                        <h2 className="text-lg font-semibold text-gray-900">High Risk</h2>
                         <Badge variant="false" size="sm">Alert</Badge>
                     </div>
                     <div className="space-y-3">
@@ -135,14 +142,14 @@ const Dashboard = () => {
                             <Link
                                 key={topic._id}
                                 to={`/topics/${topic._id}`}
-                                className="block p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:border-white/20 transition-all duration-150"
+                                className="block p-3 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 hover:border-gray-300 transition-all duration-150"
                             >
                                 <div className="flex items-start justify-between mb-1">
                                     <Badge variant={topic.category || 'general'} size="sm">
                                         {topic.category || 'general'}
                                     </Badge>
                                 </div>
-                                <h3 className="text-sm font-medium text-white line-clamp-2 mt-2">
+                                <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mt-2">
                                     {topic.title}
                                 </h3>
                                 <p className="text-xs text-gray-500 mt-1 line-clamp-1">
@@ -161,12 +168,12 @@ const Dashboard = () => {
             <Card className="p-6">
                 {/* Tabs */}
                 <div className="flex items-center justify-between mb-6">
-                    <div className="flex space-x-1 bg-slate-900/60 p-1 rounded-xl">
+                    <div className="flex space-x-1 bg-gray-100 p-1 rounded-xl">
                         <button
                             onClick={() => setActiveTab('topics')}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${activeTab === 'topics'
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'text-gray-400 hover:text-white'
+                                ? 'bg-white text-gray-900 shadow-sm'
+                                : 'text-gray-600 hover:text-gray-900'
                                 }`}
                         >
                             Recent Topics
@@ -174,8 +181,8 @@ const Dashboard = () => {
                         <button
                             onClick={() => setActiveTab('claims')}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${activeTab === 'claims'
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'text-gray-400 hover:text-white'
+                                ? 'bg-white text-gray-900 shadow-sm'
+                                : 'text-gray-600 hover:text-gray-900'
                                 }`}
                         >
                             Recent Claims
@@ -183,7 +190,7 @@ const Dashboard = () => {
                     </div>
                     <Link
                         to={activeTab === 'topics' ? '/topics' : '/claims'}
-                        className="text-sm text-indigo-400 hover:text-indigo-300 flex items-center space-x-1"
+                        className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center space-x-1"
                     >
                         <span>View All</span>
                         <ExternalLink className="w-3 h-3" />
@@ -197,12 +204,12 @@ const Dashboard = () => {
                             <Link
                                 key={topic._id}
                                 to={`/topics/${topic._id}`}
-                                className="block p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:scale-[1.01] hover:-translate-y-0.5 transition-all duration-150"
+                                className="block p-4 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-150"
                             >
                                 <div className="flex items-start justify-between">
                                     <div className="flex-1">
-                                        <h3 className="font-medium text-white">{topic.title}</h3>
-                                        <p className="text-sm text-gray-400 mt-1 line-clamp-2">{topic.summary}</p>
+                                        <h3 className="font-medium text-gray-900">{topic.title}</h3>
+                                        <p className="text-sm text-gray-600 mt-1 line-clamp-2">{topic.summary}</p>
                                     </div>
                                     <Badge variant={topic.category || 'general'} size="sm">
                                         {topic.category || 'general'}
@@ -222,10 +229,10 @@ const Dashboard = () => {
                             <Link
                                 key={claim._id}
                                 to={`/claims/${claim._id}`}
-                                className="block p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:scale-[1.01] hover:-translate-y-0.5 transition-all duration-150"
+                                className="block p-4 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-150"
                             >
                                 <div className="flex items-start justify-between gap-4">
-                                    <p className="font-medium text-white line-clamp-2 flex-1">{claim.claimText}</p>
+                                    <p className="font-medium text-gray-900 line-clamp-2 flex-1">{claim.claimText}</p>
                                     <Badge variant={claim.isVerified ? 'true' : 'unclear'} size="sm">
                                         {claim.isVerified ? 'Verified' : 'Pending'}
                                     </Badge>

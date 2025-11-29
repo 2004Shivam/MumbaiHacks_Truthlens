@@ -7,15 +7,15 @@ const Card = ({
     className = '',
     ...props
 }) => {
-    const baseStyles = 'rounded-2xl border transition-all duration-150';
+    const baseStyles = 'rounded-2xl border transition-all duration-150 shadow-sm';
 
     const variants = {
-        default: 'bg-slate-900/60 border-white/5 backdrop-blur-sm',
-        solid: 'bg-slate-900 border-white/10',
-        glass: 'bg-white/5 border-white/10 backdrop-blur-md',
+        default: 'bg-white border-gray-200',
+        solid: 'bg-white border-gray-300',
+        subtle: 'bg-gray-50 border-gray-200',
     };
 
-    const hoverStyles = hover ? 'hover:scale-[1.01] hover:-translate-y-0.5 cursor-pointer hover:border-white/10' : '';
+    const hoverStyles = hover ? 'hover:shadow-md hover:-translate-y-0.5 cursor-pointer hover:border-gray-300' : '';
 
     return (
         <div

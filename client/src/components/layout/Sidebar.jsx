@@ -15,12 +15,12 @@ const Sidebar = () => {
     ];
 
     return (
-        <div className="w-64 h-screen bg-slate-950 border-r border-white/5 flex flex-col fixed left-0 top-0">
+        <div className="w-64 h-screen bg-white border-r border-gray-200 flex flex-col fixed left-0 top-0 shadow-sm">
             {/* Logo */}
-            <div className="p-6 border-b border-white/5">
+            <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center space-x-2">
-                    <Shield className="w-8 h-8 text-indigo-500" />
-                    <span className="text-xl font-bold text-white">TruthLens</span>
+                    <Shield className="w-8 h-8 text-indigo-600" />
+                    <span className="text-xl font-bold text-gray-900">Satya AI</span>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">AI-Powered Fact Checking</p>
             </div>
@@ -36,8 +36,8 @@ const Sidebar = () => {
                             key={item.path}
                             to={item.path}
                             className={`flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-150 ${isActive
-                                    ? 'bg-indigo-500/10 text-indigo-400 border-l-2 border-indigo-500 pl-[10px]'
-                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                ? 'bg-indigo-50 text-indigo-700 border-l-3 border-indigo-600 pl-[10px] font-medium'
+                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                                 }`}
                         >
                             <Icon className="w-5 h-5" />
@@ -48,9 +48,9 @@ const Sidebar = () => {
             </nav>
 
             {/* Footer */}
-            <div className="p-4 border-t border-white/5">
+            <div className="p-4 border-t border-gray-200">
                 <div className="text-xs text-gray-500">
-                    <p>© 2024 TruthLens</p>
+                    <p>© 2025 Satya AI</p>
                     <p className="mt-1">Version 2.0</p>
                 </div>
             </div>

@@ -75,8 +75,8 @@ const ImageUpload = ({ onImageSelect, onImageRemove, disabled }) => {
             {!preview ? (
                 <Card
                     className={`p-8 border-2 border-dashed cursor-pointer transition-all duration-150 ${dragActive
-                            ? 'border-indigo-500 bg-indigo-500/10'
-                            : 'border-white/20 hover:border-white/30'
+                            ? 'border-indigo-500 bg-indigo-50'
+                            : 'border-gray-300 hover:border-gray-400'
                         } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                     onDragEnter={handleDrag}
                     onDragLeave={handleDrag}
@@ -93,16 +93,16 @@ const ImageUpload = ({ onImageSelect, onImageRemove, disabled }) => {
                         disabled={disabled}
                     />
                     <div className="flex flex-col items-center text-center">
-                        <div className="p-4 bg-indigo-500/10 rounded-full mb-4">
-                            <Upload className="w-8 h-8 text-indigo-400" />
+                        <div className="p-4 bg-indigo-50 rounded-full mb-4">
+                            <Upload className="w-8 h-8 text-indigo-600" />
                         </div>
-                        <p className="text-white font-medium mb-2">
+                        <p className="text-gray-900 font-medium mb-2">
                             Drop image here or click to upload
                         </p>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-gray-500">
                             Supports: JPG, PNG, WEBP (Max 5MB)
                         </p>
-                        <p className="text-xs text-gray-500 mt-2">
+                        <p className="text-xs text-gray-400 mt-2">
                             Perfect for WhatsApp screenshots!
                         </p>
                     </div>
@@ -113,12 +113,12 @@ const ImageUpload = ({ onImageSelect, onImageRemove, disabled }) => {
                         <img
                             src={preview}
                             alt="Preview"
-                            className="w-full rounded-xl max-h-96 object-contain bg-black/20"
+                            className="w-full rounded-xl max-h-96 object-contain bg-gray-100"
                         />
                         {!disabled && (
                             <button
                                 onClick={handleRemove}
-                                className="absolute top-2 right-2 p-2 bg-red-500 hover:bg-red-600 rounded-lg transition-colors"
+                                className="absolute top-2 right-2 p-2 bg-red-500 hover:bg-red-600 rounded-lg transition-colors shadow-md"
                             >
                                 <X className="w-4 h-4 text-white" />
                             </button>
