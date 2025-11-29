@@ -14,8 +14,16 @@ function calculateSourceQuality(sources) {
     let qualityScore = 0;
     let count = 0;
 
-    sources.forEach(source => {
-        const lowerSource = (source || '').toLowerCase();
+    sources.forEach(sourceItem => {
+        // Handle both string and object inputs
+        let sourceStr = '';
+        if (typeof sourceItem === 'string') {
+            sourceStr = sourceItem;
+        } else if (sourceItem && typeof sourceItem === 'object') {
+            sourceStr = sourceItem.url || sourceItem.source || sourceItem.title || '';
+        }
+
+        const lowerSource = sourceStr.toLowerCase();
         const isHighQuality = highQualityDomains.some(domain => lowerSource.includes(domain));
 
         if (isHighQuality) {
